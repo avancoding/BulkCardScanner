@@ -5,13 +5,18 @@ import { assertValidIdentity } from '../domain/validation';
 /**
  * Builds a validated and deduplicated catalog from raw card identities
  */
-export function buildCatalog(rawIdentities: CardIdentity[]): CardVariant[] {
+export function buildCatalog(rawIdentities: CardIdentity[], allowedRarities?: string[]): CardVariant[] {
   const seenKeys = new Set<string>();
   const catalog: CardVariant[] = [];
 
   for (const identity of rawIdentities) {
     // Validate the identity
     assertValidIdentity(identity);
+    
+    // Filter by rarity if specified
+    if (allowedRarities && !allowedRarities.includes(identity.rarity)) {
+      continue;
+    }
     
     // Check for duplicates
     const key = buildCardKey(identity);

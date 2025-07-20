@@ -33,10 +33,10 @@ export async function saveCatalog(catalog: CardVariant[]): Promise<void> {
 /**
  * Ensures catalog exists - loads from disk or builds and saves new one
  */
-export async function ensureCatalog(buildFn: () => CardVariant[]): Promise<CardVariant[]> {
+export async function ensureCatalog(buildFn: () => CardVariant[], forceRebuild?: boolean): Promise<CardVariant[]> {
   const existing = await loadCatalog();
   
-  if (existing.length > 0) {
+  if (existing.length > 0 && !forceRebuild) {
     return existing;
   }
   
